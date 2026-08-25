@@ -1,0 +1,13 @@
+﻿@model ClientManagement.Web.Controllers.HomeViewModel
+@{ ViewData["Title"] = "Clients"; var totalPages = (int)Math.Ceiling(Model.Page.TotalCount / (double)Model.Page.PageSize); }
+<header class="toolbar"><div><p class="eyebrow">CLIENT RECORDS</p><h1>Clients</h1><p class="muted">@Model.Page.TotalCount records in the directory</p></div><nav><a class="button" asp-action="Edit">Add client</a><a class="button secondary" asp-action="Export">Export addresses</a><a class="text-link" asp-controller="Account" asp-action="Logout">Sign out</a></nav></header>
+<form class="search" method="get"><input name="search" value="@Model.Search" placeholder="Search name or identity number" /><button type="submit">Search</button></form>
+<section class="table-wrap"><table><thead><tr><th>Name</th><th>Gender</th><th>Date of birth</th><th>Identity number</th><th></th></tr></thead><tbody>@foreach (var client in Model.Page.Items) { <tr><td><a asp-action="Edit" asp-route-id="@client.Id">@client.FirstName @client.LastName</a></td><td>@client.Gender</td><td>@client.DateOfBirth?.ToString("dd MMM yyyy")</td><td>@client.IdentityNumber</td><td><form method="post" asp-action="Delete" asp-route-id="@client.Id" onsubmit="return confirm('Delete this client?')"><button class="icon-button" title="Delete" type="submit">Delete</button></form></td></tr> } @if (!Model.Page.Items.Any()) { <tr><td colspan="5" class="empty">No clients match this search.</td></tr> }</tbody></table></section>
+@if (totalPages > 1) { <div class="pagination">@for (var i = 1; i <= totalPages; i++) { <a class="@(i == Model.Page.Page ? "current" : "")" asp-route-page="@i" asp-route-search="@Model.Search">@i</a> }</div> }@{
+    ViewData["Title"] = "Home Page";
+}
+
+<div class="text-center">
+    <h1 class="display-4">Welcome</h1>
+    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+</div>
